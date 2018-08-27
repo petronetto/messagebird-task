@@ -3,25 +3,27 @@ services:
 #---------------------------------------------
 # API container
 #---------------------------------------------
-  mb.php:
-    container_name: mb.php
+  php-fpm:
+    container_name: php-fpm
     build: .
     restart: unless-stopped
     volumes:
       - ./:/app
       - ./sock:/sock
       - ./logs/php:/var/log/php
+    env_file:
+      - .env
     networks:
-      - mb
+      - messagebird
 #---------------------------------------------
 # NGINX Container
 #---------------------------------------------
-  mb.nginx:
-    container_name: mb.nginx
+  nginx:
+    container_name: nginx
     build: ./docker/nginx
     restart: unless-stopped
     links:
-      - mb.php
+      - php-fpm
     volumes:
       - ./:/app
       - ./sock:/sock
@@ -29,10 +31,10 @@ services:
     ports:
       - 8080:8080
     networks:
-      - mb
+      - messagebird
 #-------------------------------------------------------
 # Networks
 #-------------------------------------------------------
 networks:
-  mb:
+  messagebird:
     external: true
