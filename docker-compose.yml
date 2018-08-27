@@ -1,0 +1,38 @@
+version: '3'
+services:
+#---------------------------------------------
+# API container
+#---------------------------------------------
+  mb.php:
+    container_name: mb.php
+    build: .
+    restart: unless-stopped
+    volumes:
+      - ./:/app
+      - ./sock:/sock
+      - ./logs/php:/var/log/php
+    networks:
+      - mb
+#---------------------------------------------
+# NGINX Container
+#---------------------------------------------
+  mb.nginx:
+    container_name: mb.nginx
+    build: ./docker/nginx
+    restart: unless-stopped
+    links:
+      - mb.php
+    volumes:
+      - ./:/app
+      - ./sock:/sock
+      - ./logs/nginx:/var/log/nginx
+    ports:
+      - 8080:8080
+    networks:
+      - mb
+#-------------------------------------------------------
+# Networks
+#-------------------------------------------------------
+networks:
+  mb:
+    external: true
