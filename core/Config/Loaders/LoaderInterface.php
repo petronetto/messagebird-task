@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Core\Config\Loaders;
 
-interface Loader
+interface LoaderInterface
 {
     public function parse(): array;
 }

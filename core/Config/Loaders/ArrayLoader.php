@@ -7,7 +7,7 @@ namespace Core\Config\Loaders;
 use DirectoryIterator;
 use SplFileInfo;
 
-class ArrayLoader implements Loader
+class ArrayLoader implements LoaderInterface
 {
     /** @var string */
     protected $path;

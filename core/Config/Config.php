@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Core\Config;
 
-use Core\Config\Loaders\Loader;
+use Core\Config\Loaders\LoaderInterface;
 
-class Config
+class Config implements ConfigInterface
 {
     /** @var array */
     protected $items = [];
@@ -21,7 +21,7 @@ class Config
     public function load(array $loaders): Config
     {
         foreach ($loaders as $loader) {
-            if (!$loader instanceof Loader) {
+            if (!$loader instanceof LoaderInterface) {
                 continue;
             }
 
@@ -34,7 +34,7 @@ class Config
     /**
      * @param string $key
      * @param mixed $default
-     * @return void
+     * @return mixed
      */
     public function get(string $key, $default = null)
     {
