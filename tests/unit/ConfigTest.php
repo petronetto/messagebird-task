@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+namespace Tests;
+
 use Core\Config\Config;
 use Core\Config\Loaders\ArrayLoader;
 

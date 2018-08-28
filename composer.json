@@ -12,6 +12,11 @@
             "core/helpers.php"
         ]
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require": {
         "php": ">=7.1",
         "messagebird/php-rest-api": "^1.10",
