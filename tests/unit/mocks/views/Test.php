@@ -1,0 +1,1 @@
+<?php echo 'The answer for everything: ' . @$answer; ?>
