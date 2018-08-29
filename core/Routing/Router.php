@@ -79,6 +79,8 @@ class Router implements RouterInterface
      */
     protected function extractParams(array $matches, string $route): void
     {
+        $this->routes[$route]['params'] = [];
+
         foreach ($matches as $key => $match) {
             if (is_string($key)) {
                 $this->routes[$route]['params'][] = $matches[$key];
