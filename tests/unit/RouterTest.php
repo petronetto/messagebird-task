@@ -51,6 +51,7 @@ class RouterTest extends BaseTest
                 'index',
             ],
             'methods' => ['GET'],
+            'params'  => [],
         ];
 
         $handler = $router->dispatch('GET', '/');
