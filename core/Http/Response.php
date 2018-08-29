@@ -6,7 +6,7 @@ namespace Core\Http;
 
 use Core\Exceptions\NotFoundException;
 
-class Response
+class Response implements ResponseInterface
 {
     /** @var mixed */
     protected $body;
@@ -18,10 +18,10 @@ class Response
     protected $headers = [];
 
     /**
-     * @param  mixed    $body
-     * @return Response
+     * @param  mixed             $body
+     * @return ResponseInterface
      */
-    public function setBody($body): Response
+    public function setBody($body): ResponseInterface
     {
         $this->body = $body;
 
@@ -37,11 +37,11 @@ class Response
     }
 
     /**
-     * @param  array    $name
-     * @param  array    $value
-     * @return Response
+     * @param  array             $name
+     * @param  array             $value
+     * @return ResponseInterface
      */
-    public function setHeaders(string $name, string $value): Response
+    public function setHeaders(string $name, string $value): ResponseInterface
     {
         $this->headers[] = [$name, $value];
 
@@ -49,11 +49,11 @@ class Response
     }
 
     /**
-     * @param  string   $file
-     * @param  string   $args
-     * @return Response
+     * @param  string            $file
+     * @param  string            $args
+     * @return ResponseInterface
      */
-    public function view(string $file, array $args = [], string $viewsPath = null): Response
+    public function view(string $file, array $args = [], string $viewsPath = null): ResponseInterface
     {
         if (!$viewsPath) {
             $viewsPath = base_path('app/Views/');
@@ -85,10 +85,10 @@ class Response
     }
 
     /**
-     * @param  int      $statusCode
-     * @return Response
+     * @param  int               $statusCode
+     * @return ResponseInterface
      */
-    public function withStatusCode(int $statusCode): Response
+    public function withStatusCode(int $statusCode): ResponseInterface
     {
         $this->statusCode = $statusCode;
 
@@ -104,10 +104,10 @@ class Response
     }
 
     /**
-     * @param  array    $body
-     * @return Response
+     * @param  array             $body
+     * @return ResponseInterface
      */
-    public function withJson(array $body): Response
+    public function withJson(array $body): ResponseInterface
     {
         $this->setHeaders('Content-Type', 'application/json');
 
