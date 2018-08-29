@@ -1,23 +1,23 @@
 <?php
 
-declare(strict_types=1);
+$container = require_once sprintf(
+    '%s/bootstrap/init.php',
+    realpath(__DIR__ . '/..//')
+);
 
-error_reporting(-1);
+try {
+    $app = new Core\App(
+        $container,
+        $container->get('router')
+    );
 
-require sprintf('%s/vendor/autoload.php', realpath(__DIR__ . '/..//'));
+    //------------------------        Routes       ------------------------//
+    $app->get('/', [App\Controllers\MessageController::class, 'index']);
+    $app->get('messages/:msg', [App\Controllers\MessageController::class, 'index']);
 
-$container = new Core\Container\Container;
+    //------------------------       /Routes       ------------------------//
 
-$container->share('config', function () {
-    $config = new Core\Config\Config;
-    $arrayLoader = new Core\Config\Loaders\ArrayLoader(realpath(__DIR__ . '/../config'));
-
-    $config->load([$arrayLoader]);
-
-    return $config;
-});
-
-$config = $container->get('config');
-
-dump($config->get('app.name'));
-dump($config->get('app.isprod'));
+    $app->run();
+} catch (\Throwable $t) {
+    echo $t->getMessage();
+}
