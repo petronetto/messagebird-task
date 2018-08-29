@@ -7,7 +7,7 @@ namespace Core\Routing;
 use Core\Exceptions\NotAllowedHttpException;
 use Core\Exceptions\NotFoundHttpException;
 
-class Router
+class Router implements RouterInterface
 {
     /** @var array */
     protected $routes = [];
@@ -18,7 +18,7 @@ class Router
      * @param  array  $methods
      * @return void
      */
-    public function addRoute(string $route, string $handler, array $methods = ['GET']): void
+    public function addRoute(string $route, array $handler, array $methods = ['GET']): void
     {
         // Escaping forward slashes and trim the first one
         $route = preg_replace('/\//', '\\/', ltrim($route, '/'));

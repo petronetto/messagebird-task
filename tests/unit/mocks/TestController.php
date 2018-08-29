@@ -6,7 +6,7 @@ namespace Tests\Mocks;
 
 class TestController
 {
-    public function __invoke(string $id, string $num)
+    public function index(string $id, string $num)
     {
         return [$id, $num];
     }

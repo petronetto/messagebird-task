@@ -15,16 +15,22 @@ class RouterTest extends BaseTest
     {
         $router = new Router;
 
-        $router->addRoute('', TestController::class);
-        $router->addRoute('some/:id', TestController::class);
+        $router->addRoute('', [TestController::class,'index']);
+        $router->addRoute('some/:id', [TestController::class,'index']);
 
         $expected = [
             '/^\/*$/i' => [
-                'handler' => 'Tests\Mocks\TestController',
+                'handler' => [
+                    'Tests\Mocks\TestController',
+                    'index',
+                ],
                 'methods' => ['GET'],
             ],
             '/^\/*some\/(?P<id>[\w]+)\/*$/i' => [
-                'handler' => 'Tests\Mocks\TestController',
+                'handler' => [
+                    'Tests\Mocks\TestController',
+                    'index',
+                ],
                 'methods' => ['GET'],
             ],
         ];
@@ -36,11 +42,14 @@ class RouterTest extends BaseTest
     {
         $router = new Router;
 
-        $router->addRoute('/', TestController::class);
-        $router->addRoute('/some/:id', TestController::class);
+        $router->addRoute('/', [TestController::class,'index']);
+        $router->addRoute('/some/:id', [TestController::class,'index']);
 
         $expected = [
-            'handler' => 'Tests\Mocks\TestController',
+            'handler' => [
+                'Tests\Mocks\TestController',
+                'index',
+            ],
             'methods' => ['GET'],
         ];
 
@@ -49,7 +58,10 @@ class RouterTest extends BaseTest
         $this->assertEquals($expected, $handler);
 
         $expected = [
-            'handler' => 'Tests\Mocks\TestController',
+            'handler' => [
+                'Tests\Mocks\TestController',
+                'index',
+            ],
             'methods' => ['GET'],
             'params'  => ['123'],
         ];
@@ -72,7 +84,7 @@ class RouterTest extends BaseTest
 
         $router = new Router;
 
-        $router->addRoute('/', TestController::class);
+        $router->addRoute('/', [TestController::class,'index']);
 
         $router->dispatch('POST', '/');
     }
