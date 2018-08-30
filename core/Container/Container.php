@@ -114,7 +114,9 @@ class Container implements ContainerInterface
     protected function getDependencies(ReflectionMethod $constructor)
     {
         return array_map(function (ReflectionParameter $dependency) {
-            return $this->resolveReflectedDependency($dependency);
+            if ($dependency->getType() && !$dependency->allowsNull()) {
+                return $this->resolveReflectedDependency($dependency);
+            }
         }, $constructor->getParameters());
     }
 

@@ -17,9 +17,42 @@ if (!function_exists('base_path')) {
     }
 }
 
+if (!function_exists('base_url')) {
+    /**
+     * Get the application base url.
+     *
+     * @return string
+     */
+    function base_url(): string
+    {
+        return sprintf(
+            '%s:%s',
+            getenv('APP_URL'),
+            getenv('APP_PORT')
+        );
+    }
+}
+
+if (!function_exists('assets')) {
+    /**
+     * Get the application path for assets.
+     *
+     * @param  string $path
+     * @return string
+     */
+    function assets(string $file): string
+    {
+        return sprintf(
+            '%s/assets/%s',
+            base_url(),
+            $file
+        );
+    }
+}
+
 if (!function_exists('app_log')) {
     /**
-     * A simple logger to use in application bootstrap.
+     * A simple logger.
      *
      * @param  string $message
      * @return void

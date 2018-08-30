@@ -115,4 +115,18 @@ class Response implements ResponseInterface
 
         return $this;
     }
+
+    /**
+     * @param  string            $uri
+     * @return ResponseInterface
+     */
+    public function redirect(string $uri): ResponseInterface
+    {
+        ($uri !== '/') ?: $uri = null;
+        $this->setHeaders('location', sprintf('%s/%s', base_url(), $uri));
+
+        // dd($this->getHeaders());
+
+        return $this;
+    }
 }

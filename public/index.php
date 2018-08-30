@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 $container = require_once sprintf(
     '%s/bootstrap/init.php',
     realpath(__DIR__ . '/..//')
@@ -12,12 +14,17 @@ try {
     );
 
     //------------------------        Routes       ------------------------//
-    $app->get('/', [App\Controllers\MessageController::class, 'index']);
-    $app->get('messages/:msg', [App\Controllers\MessageController::class, 'index']);
+    $app->get('/', [App\Controllers\SmsController::class, 'index']);
+    $app->post('messages', [App\Controllers\SmsController::class, 'create']);
 
     //------------------------       /Routes       ------------------------//
 
     $app->run();
 } catch (\Throwable $t) {
-    echo $t->getMessage();
+    header('Content-Type: application/json');
+
+    echo json_encode([
+        'message' => $t->getMessage(),
+        'trace'  => $t->getTrace(),
+    ]);
 }
