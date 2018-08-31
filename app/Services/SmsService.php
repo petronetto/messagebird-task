@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use App\Exceptions\InvalidArgumentException;
 use Core\Config\ConfigInterface;
+use Core\Exceptions\InvalidArgumentException;
 use MessageBird\Client;
 use MessageBird\Objects\Message;
 
