@@ -2,9 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Exceptions;
-
-use Core\Exceptions\BaseException;
+namespace Core\Exceptions;
 
 class InvalidArgumentException extends BaseException
 {
