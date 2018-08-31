@@ -125,8 +125,6 @@ class Response implements ResponseInterface
         ($uri !== '/') ?: $uri = null;
         $this->setHeaders('location', sprintf('%s/%s', base_url(), $uri));
 
-        // dd($this->getHeaders());
-
         return $this;
     }
 }
