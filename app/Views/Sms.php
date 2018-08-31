@@ -20,4 +20,4 @@
         <button class="btn btn-info btn-block" type="submit">Send</button>
     </form>
 </main>
-<?php include_once base_path('Views/partials/footer.php'); ?>
+<?php include_once base_path('app/Views/partials/footer.php'); ?>
