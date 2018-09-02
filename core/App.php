@@ -34,11 +34,7 @@ class App
         $this->container = $container;
 
         if (!$this->router) {
-            $this->container->share('router', function (ContainerInterface $c) {
-                return $c->get(Router::class);
-            });
-
-            $router = $this->container->get('router');
+            $router = new Router;
         }
 
         $this->router = $router;

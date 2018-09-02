@@ -8,12 +8,10 @@ $container = require_once sprintf(
 );
 
 try {
-    $app = new Core\App(
-        $container,
-        $container->get('router')
-    );
+    $app = new Core\App($container);
 
     //------------------------        Routes       ------------------------//
+
     $app->get('/', [App\Controllers\SmsController::class, 'index']);
     $app->post('messages', [App\Controllers\SmsController::class, 'create']);
 
@@ -25,6 +23,6 @@ try {
 
     echo json_encode([
         'message' => $t->getMessage(),
-        'trace'  => $t->getTrace(),
+        'trace'   => $t->getTrace(),
     ]);
 }
