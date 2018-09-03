@@ -1,7 +1,7 @@
 <?php include_once base_path('app/Views/partials/head.php'); ?>
 <?php include_once base_path('app/Views/partials/navbar.php'); ?>
 <main role="main" class="container">
-    <form class="text-center border border-light p-5" action="/messages" method="POST">
+    <form class="text-center border border-light p-5" action="<?php echo base_url('sms/create'); ?>" method="POST">
 
         <p class="h4 mb-4">Send a message!</p>
 
@@ -13,7 +13,8 @@
 
         <!-- Message -->
         <div class="form-group">
-            <textarea class="form-control rounded-0" name="message" rows="3" placeholder="Message"></textarea>
+            <textarea class="form-control rounded-0" name="message" rows="3"
+                maxlength="1000" placeholder="Message"></textarea>
         </div>
 
         <!-- Send button -->
