@@ -1,40 +1,16 @@
 version: '3'
 services:
 #---------------------------------------------
-# API container
+# Application container
 #---------------------------------------------
-  php-fpm:
-    container_name: php-fpm
+  sms-app:
+    container_name: sms-app
     build: .
     restart: unless-stopped
     volumes:
       - ./:/app
-      - ./sock:/sock
       - ./logs/php:/var/log/php
     env_file:
       - .env
-    networks:
-      - messagebird
-#---------------------------------------------
-# NGINX Container
-#---------------------------------------------
-  nginx:
-    container_name: nginx
-    build: ./docker/nginx
-    restart: unless-stopped
-    links:
-      - php-fpm
-    volumes:
-      - ./:/app
-      - ./sock:/sock
-      - ./logs/nginx:/var/log/nginx
     ports:
-      - 8080:8080
-    networks:
-      - messagebird
-#-------------------------------------------------------
-# Networks
-#-------------------------------------------------------
-networks:
-  messagebird:
-    external: true
+     - 8080:8080
