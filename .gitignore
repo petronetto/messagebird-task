@@ -130,6 +130,7 @@ tags
 public/coverage/
 tests/coverage/
 tests/db.sqlite
+storage
 *.log
 *.sock
 .env
