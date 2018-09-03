@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+
+<?php
+
+echo 'Worker is running...' . PHP_EOL;
+
+$container = require_once sprintf(
+    '%s/bootstrap/init.php',
+    realpath(__DIR__)
+);
+
+while (true) {
+    $storage = new \Core\Storage\FileStorage(base_path(), 'jobs');
+
+    $jobs = $storage->all();
+
+    foreach ($jobs as $key => $job) {
+        try {
+            $j = unserialize($job);
+
+            if ($j instanceof \Core\Jobs\JobInterface) {
+                $j->handle();
+                $storage->delete($key);
+            }
+        } catch (\Throwable $t) {
+            app_log($t->getMessage());
+            $failedStorage = new \Core\Storage\FileStorage(base_path(), 'failed_jobs');
+            $failedStorage->set($key, $job);
+            $storage->delete($key);
+        }
+        sleep(1);
+    }
+}
