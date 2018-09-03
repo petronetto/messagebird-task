@@ -33,24 +33,41 @@ class SmsController extends Controller
         return $this->response->view('Sms');
     }
 
+    public function getList()
+    {
+        $list = $this->sms->getList();
+
+        return $this->response->view('SmsList', [
+            'list' => $list,
+        ]);
+    }
+
+    public function getSMSDetails($id)
+    {
+        return $this->response->withJson([
+            'sms' => $this->sms->read($id),
+        ]);
+    }
+
     public function create()
     {
         $this->validate($_REQUEST);
 
-        $result = $this->sms->send(
+        $this->sms->send(
             $_POST['originator'],
             $this->extractRecipents($_POST['recipient']),
             $_POST['message']
         );
 
-        return $this->response->withJson([
-            'response' => $result
-        ]);
+        flash('Your SMS will be sent, please check the status in SMS\'s list.');
+
+        return $this->response->redirect('/');
     }
 
     /**
      * @param  array $request
      * @return void
+     * @throws ValidationException
      */
     protected function validate(array $request): void
     {

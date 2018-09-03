@@ -36,9 +36,11 @@ class Router implements RouterInterface
     }
 
     /**
-     * @param  string $method
-     * @param  string $uri
+     * @param  string                  $method
+     * @param  string                  $uri
      * @return array
+     * @throws NotFoundHttpException
+     * @throws NotAllowedHttpException
      */
     public function dispatch(string $method, string $uri): array
     {
@@ -56,7 +58,7 @@ class Router implements RouterInterface
     }
 
     /**
-     * @param  string  $url
+     * @param  string      $url
      * @return string|null
      */
     protected function match(string $url): ?string

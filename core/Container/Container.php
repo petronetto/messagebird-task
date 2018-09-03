@@ -72,7 +72,6 @@ class Container implements ContainerInterface
     /**
      * @param  string $className
      * @return mixed
-     *
      * @throws NotFoundException
      */
     protected function autowire(string $className)
@@ -95,7 +94,6 @@ class Container implements ContainerInterface
     /**
      * @param  string          $className
      * @return ReflectionClass
-     *
      * @throws NotFoundException
      */
     protected function getReflector(string $className): ReflectionClass
@@ -123,7 +121,6 @@ class Container implements ContainerInterface
     /**
      * @param  ReflectionParameter $dependency
      * @return mixed
-     *
      * @throws NotFoundException
      */
     protected function resolveReflectedDependency(ReflectionParameter $dependency)

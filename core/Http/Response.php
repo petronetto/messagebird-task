@@ -49,9 +49,11 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param  string            $file
-     * @param  string            $args
+     * @param string $file
+     * @param array $args
+     * @param string $viewsPath
      * @return ResponseInterface
+     * @throws NotFoundException
      */
     public function view(string $file, array $args = [], string $viewsPath = null): ResponseInterface
     {
@@ -62,7 +64,7 @@ class Response implements ResponseInterface
         $viewFile  = sprintf('%s/%s.php', $viewsPath, $file);
 
         if (!file_exists($viewFile)) {
-            throw new NotFoundException();
+            throw new NotFoundException;
         }
 
         ob_start();
@@ -117,13 +119,12 @@ class Response implements ResponseInterface
     }
 
     /**
-     * @param  string            $uri
+     * @param  string            $path
      * @return ResponseInterface
      */
-    public function redirect(string $uri): ResponseInterface
+    public function redirect(string $path): ResponseInterface
     {
-        ($uri !== '/') ?: $uri = null;
-        $this->setHeaders('location', sprintf('%s/%s', base_url(), $uri));
+        $this->setHeaders('location', base_url($path));
 
         return $this;
     }

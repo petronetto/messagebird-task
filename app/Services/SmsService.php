@@ -4,9 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Jobs\SendSms;
 use Core\Config\ConfigInterface;
 use Core\Exceptions\InvalidArgumentException;
+use Core\Jobs\Dispatcher;
 use MessageBird\Client;
+use MessageBird\Objects\BaseList;
 use MessageBird\Objects\Message;
 
 class SmsService
@@ -18,18 +21,44 @@ class SmsService
     protected $config;
 
     /**
-     * @param ConfigInterface $config
+     * @param  ConfigInterface          $config
+     * @param  Client                   $client
+     * @throws InvalidArgumentException
      */
-    public function __construct(ConfigInterface $config)
+    public function __construct(ConfigInterface $config, Client $client)
     {
         $this->config = $config;
+        $this->client = $client;
+
+        if (!$key = $this->config->get('sms.key')) {
+            throw new InvalidArgumentException('You must provide the API Key');
+        }
+
+        $this->client->setAccessKey($key);
     }
 
     /**
-     * @param  string $originator
-     * @param  array  $recipients
-     * @param  string $text
-     * @return mixed
+     * @param  array    $parameters
+     * @return BaseList
+     */
+    public function getList(array $parameters = []): BaseList
+    {
+        return $this->client->messages->getList($parameters);
+    }
+
+    /**
+     * @param  string   $id
+     * @return BaseList
+     */
+    public function read($id)
+    {
+        return $this->client->messages->read($id);
+    }
+
+    /**
+     * @param string $originator
+     * @param array  $recipients
+     * @param string $text
      */
     public function send(string $originator, array $recipients, string $text)
     {
@@ -37,40 +66,37 @@ class SmsService
         $message->originator = $originator;
         $message->recipients = $recipients;
 
-        $text = $this->stringToHexa($text);
-
         if (strlen($text) >= 160) {
-            return $this->sendBinarySms($message, $text);
+            $text = $this->stringToHexa($text);
+
+            $this->sendBinarySms($message, $text);
+
+            return;
         }
 
-        return $this->sendSms($message, $text);
+        $this->sendSms($message, $text);
     }
 
     /**
-     * @param  Message $message
-     * @param  string  $text
-     * @return mixed
+     * @param Message $message
+     * @param string  $text
      */
-    protected function sendSms(Message $message, string $text): Message
+    protected function sendSms(Message $message, string $text)
     {
-        $client = $this->getClient();
+        $message->body = $text;
 
-        $ref = rand(1, 255);
+        $dispatcher = new Dispatcher;
 
-        $message->setBinarySms(
-            $this->getUdh($ref, 1, 1),
-            $text
-        );
+        $job = new SendSms($this->client, $message);
 
-        return $client->messages->create($message);
+        $dispatcher->dispatch($job);
     }
 
     /**
-     * @param  Message $message
-     * @param  string  $text
-     * @return array
+     * @param Message $message
+     * @param string  $text
      */
-    protected function sendBinarySms(Message $message, string $text): array
+    protected function sendBinarySms(Message $message, string $text)
     {
         $response = [];
 
@@ -79,30 +105,16 @@ class SmsService
         $ref = rand(1, 255);
 
         foreach ($parts as $index => $part) {
-            $client = $this->getClient();
-            sleep(1);
+            $udh = $this->getUdh($ref, count($parts), $index + 1);
 
-            $message->setBinarySms(
-                $this->getUdh($ref, count($parts), $index + 1),
-                $part
-            );
+            $message->setBinarySms($udh, $part);
 
-            $response[] = $client->messages->create($message);
+            $dispatcher = new Dispatcher;
+
+            $job = new SendSms($this->client, $message);
+
+            $dispatcher->dispatch($job);
         }
-
-        return $response;
-    }
-
-    /**
-     * @return Client
-     */
-    protected function getClient(): Client
-    {
-        if (!$key = $this->config->get('sms.key')) {
-            throw new InvalidArgumentException('You must provide the API Key');
-        }
-
-        return new Client($key);
     }
 
     /**
