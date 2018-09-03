@@ -2,8 +2,6 @@
 
 declare(strict_types=1);
 
-error_reporting(-1);
-
 $container = require_once sprintf(
     '%s/bootstrap/init.php',
     realpath(__DIR__ . '/..//')
